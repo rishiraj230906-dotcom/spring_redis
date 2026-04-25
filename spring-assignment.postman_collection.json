@@ -1,0 +1,125 @@
+{
+  "info": {
+    "_postman_id": "a1b2c3d4-e5f6-7890-1234-56789abcdef0",
+    "name": "Spring Boot Grid07 Assignment",
+    "description": "Collection for testing Posts, Comments, Likes, and Redis Guardrails",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "postId",
+      "value": "1"
+    },
+    {
+      "key": "userId",
+      "value": "1"
+    },
+    {
+      "key": "botId",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "Create Post",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/posts",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "posts"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"authorId\": 1,\n  \"authorType\": \"USER\",\n  \"content\": \"This is a test post\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Add Comment (Dynamic Bot)",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "let iteration = pm.info.iteration;",
+              "let botId = (iteration % 200) + 1;",
+              "pm.environment.set(\"botId\", botId);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/posts/{{postId}}/comments",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "posts", "{{postId}}", "comments"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"authorId\": {{botId}},\n  \"authorType\": \"BOT\",\n  \"content\": \"Bot {{botId}} comment\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Add Comment (User)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/posts/{{postId}}/comments",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "posts", "{{postId}}", "comments"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"authorId\": {{userId}},\n  \"authorType\": \"USER\",\n  \"content\": \"User comment\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Like Post",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/posts/{{postId}}/like",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "posts", "{{postId}}", "like"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"userId\": {{userId}}\n}"
+        }
+      }
+    }
+  ]
+}
