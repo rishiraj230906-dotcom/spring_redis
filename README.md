@@ -1,5 +1,5 @@
 What This Is?
-It A backend spring boot project that prevents bot spam using Redis. It Handles 200 concurrent requests without breaking.
+It is a backend spring boot project that prevents bot spam using Redis. It Handles 200 concurrent requests without breaking.
 
 Tech Stack Used
 * Java 21 + Spring Boot 4.0
