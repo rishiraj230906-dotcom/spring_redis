@@ -1,12 +1,12 @@
-What This Is?
+# What This Is?
 It is a backend spring boot project that prevents bot spam using Redis. It Handles 200 concurrent requests without breaking.
 
-Tech Stack Used
+# Tech Stack Used
 * Java 21 + Spring Boot 4.0
 * PostgreSQL 15 (data storage)
 * Redis 7 (counters & locks)
 
-Features
+# Features
 Phase 1: Basic API
     Create posts, comments, likes
     PostgreSQL database
@@ -19,21 +19,25 @@ Phase 2: Redis Guardrails
 Instead of relying on Java synchronization (which fails in distributed systems), I used Redis as a centralized, thread-safe gatekeeper.
   1. Horizontal Cap (Max 100 Bot Replies)
     Approach:-
-        I used Redis’ atomic INCR operation:
+        I used Redis atomic INCR operation:
 
-  Why this is thread-safe:
+      Why this is thread-safe:
         INCR is atomic in Redis
         Even with 200 concurrent requests:
             Each increment happens sequentially inside Redis
             No two threads can corrupt the value
+
   2. Cooldown Cap (Bot ↔ Human Interaction)
     Approach:-
-        Used Redis SETNX (set-if-absent) with TTL:
+        Used Redis SETNX
 
-  Why this is thread-safe:
+     Why this is thread-safe:
         SETNX is atomic
         Only one request succeeds
         Others fail immediately    
+
+  4. Vertical Cap:
+     A comment thread cannot go deeper than 20 levels. (Reject if depth_level > 20).
 
 Phase 3: Smart Notifications
     Max 1 notification per 15 minutes
@@ -45,8 +49,8 @@ Phase 4: Testing
     Statelessness verification
     Data integrity checks
 
-Quick Start:
-1. Start databases
+# Quick Start:
+1. Startt databases
     docker-compose up -d
 2. Run app
     mvn spring-boot:run
