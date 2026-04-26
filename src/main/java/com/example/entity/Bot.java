@@ -67,7 +67,6 @@ public class Bot {
 
 	public Bot() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
     
 }
