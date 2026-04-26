@@ -56,14 +56,12 @@ public class AppController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
             
         } catch (DataAccessException e) {
-            // Database error
             Map<String, String> errorResponse = new HashMap<>();
             errorResponse.put("error", "Database error: " + e.getMostSpecificCause().getMessage());
             errorResponse.put("type", "DATABASE_ERROR");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
             
         } catch (Exception e) {
-            // Catch-all for debugging
             Map<String, String> errorResponse = new HashMap<>();
             errorResponse.put("error", e.getMessage());
             errorResponse.put("type", e.getClass().getSimpleName());
